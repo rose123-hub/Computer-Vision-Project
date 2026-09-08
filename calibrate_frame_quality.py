@@ -1,27 +1,3 @@
-"""
-Calibrate the frame-quality gate against a real video BEFORE the demo.
-
-Why this exists:
-  BLUR_THRESHOLD / DARKNESS_THRESHOLD in utils/frame_quality.py are generic
-  guesses. Different cameras / compression give very different baseline
-  Laplacian-variance and brightness values even on footage that looks perfectly
-  fine. If the thresholds are wrong for tomorrow's clip, the gate can flag
-  *every* frame -> detection never runs at full confidence, and the demo looks
-  broken.
-
-What it does:
-  Samples frames across the whole video and reports the real distribution of
-  both metrics, plus the percentage of frames that would be flagged at the
-  current thresholds. If that percentage is much higher than the video actually
-  looks blurry/dark, lower the threshold(s) in utils/frame_quality.py, then
-  re-run this until the flag rate looks sane.
-
-Do this ONCE, tonight, on a clip similar to what you expect tomorrow.
-Don't discover it live.
-
-Usage:
-    python calibrate_frame_quality.py /path/to/video.mp4 [--samples 300]
-"""
 
 import argparse
 import statistics
@@ -48,8 +24,6 @@ def percentile(sorted_vals, pct):
 
 
 def summarize(name, values, threshold):
-    """Print a distribution summary and the % of frames below `threshold`
-    (both metrics flag a frame when the value is BELOW its threshold)."""
     vs = sorted(values)
     print(f"\n{name}")
     print("-" * len(name))
