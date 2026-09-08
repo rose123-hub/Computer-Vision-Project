@@ -1,30 +1,3 @@
-"""
-Person detection + tracking with TEMPORARY IDs (ByteTrack).
-
-Detector : YOLOv8n, COCO-pretrained, filtered to the `person` class (id 0).
-Tracker  : ByteTrack -> motion association only (Kalman filter + IoU).
-           No appearance memory. When a person leaves and re-enters the frame
-           they get a BRAND-NEW incrementing ID, because ByteTrack has no way
-           to recognize "this is the same person as before."
-
-Contrast this with detect_track_persistent_id.py, which is the SAME script
-with one differing line (the tracker config) and therefore KEEPS the old ID
-on re-entry. See that file's header for the exact line-by-line diff.
-
-Also drawn on every frame:
-  - a per-track hit-streak confirmation gate  (false-positive mitigation)
-  - a running FPS readout
-  - a live occupancy readout:  "In view: N"  and  "Peak: M"
-    (how many confirmed people are on screen right now / the max seen so far
-     this run). This is a live, in-memory-only count -- it resets when the
-     script restarts and is deliberately NOT a unique cumulative footfall
-     count (that would need line-crossing logic, which is out of scope).
-
-Usage:
-    python detect_track_temporary_id.py /path/to/video.mp4
-    (press q in the window to quit)
-"""
-
 import argparse
 import time
 
