@@ -1,44 +1,3 @@
-"""
-Person detection + tracking with PERSISTENT IDs (BoT-SORT + Re-ID).
-
-Detector : YOLOv8n, COCO-pretrained, filtered to the `person` class (id 0).
-Tracker  : BoT-SORT with appearance Re-ID enabled -> motion association
-           (Kalman + IoU) PLUS a per-track appearance embedding kept in a
-           short-term in-memory gallery of recently-lost tracks. A new
-           detection is compared by appearance similarity against that gallery
-           before a new ID is minted -- if it matches closely enough, the OLD
-           ID is restored. So a person who leaves and re-enters within the
-           short-term window KEEPS their original ID.
-
---------------------------------------------------------------------------
-This file is intentionally ALMOST IDENTICAL to detect_track_temporary_id.py.
-The ONLY functional difference is the tracker config passed to model.track():
-
-    detect_track_temporary_id.py :   TRACKER = "bytetrack.yaml"
-    detect_track_persistent_id.py:   TRACKER = "botsort.yaml"   <-- here
-
-  bytetrack.yaml -> ultralytics built-in; motion only, NO appearance model.
-  botsort.yaml   -> ultralytics built-in BoT-SORT; motion + appearance Re-ID.
-                    Re-ID is governed by the `with_reid` flag inside that config
-                    (recent ultralytics enables it). Re-ID is what makes an ID
-                    persist across a short re-entry -- if your ultralytics build
-                    ships it off, confirm it with the check in the README.
-
-Everything else -- the frame-quality gate, the hit-streak confirmation, the
-FPS overlay, the occupancy/peak overlay, the CLI -- is line-for-line the same.
---------------------------------------------------------------------------
-
-Known honest limit: the Re-ID gallery is SHORT-TERM (track_buffer frames /
-seconds), not a long-term recognition system. A person gone for minutes gets a
-new ID either way. True long-term / cross-visit identity needs a stored
-embedding (vector) database -- documented, not implemented. See
-docs/DATABASE_DESIGN.md.
-
-Usage:
-    python detect_track_persistent_id.py /path/to/video.mp4
-    (press q in the window to quit)
-"""
-
 import argparse
 import time
 
@@ -48,25 +7,13 @@ from ultralytics import YOLO
 from utils.frame_quality import is_blurry, is_too_dark
 
 # ---- Tunables -------------------------------------------------------------
-MODEL_PATH   = "yolov8n.pt"   # COCO-pretrained nano; auto-downloads once
-PERSON_CLASS = 0              # COCO class id for "person"
-BASE_CONF    = 0.35           # detector confidence on normal frames.
-                              #   Tuned above YOLO's ~0.25 default to cut
-                              #   low-confidence spurious boxes  (FP fix #1)
-LOWQ_CONF    = 0.55           # raised confidence on blurry/dark frames
-MIN_HITS     = 3              # a track must be seen this many CONSECUTIVE
-                              #   frames before it is confirmed & drawn.
-                              #   Kills single-frame flicker (poster/reflection
-                              #   misdetected for one frame)     (FP fix #2)
-MIN_BOX_HEIGHT = 120         # px; ignore detections shorter than this.
-                              #   Far-away street pedestrians produce short
-                              #   boxes -- this keeps "In view" to people who
-                              #   are actually near the camera/entrance.
-                              #   RAISE to count only close people, LOWER to
-                              #   include more distant ones. Tune per camera.
-
-# >>> THE ONE LINE THAT DEFINES THIS SCRIPT'S BEHAVIOR <<<
-TRACKER = "botsort.yaml"     # BoT-SORT: motion + appearance Re-ID -> persistent IDs
+MODEL_PATH   = "yolov8n.pt"  
+PERSON_CLASS = 0             
+BASE_CONF    = 0.35           
+LOWQ_CONF    = 0.55          
+MIN_HITS     = 3              
+MIN_BOX_HEIGHT = 120         
+TRACKER = "botsort.yaml"     
 # ---------------------------------------------------------------------------
 
 
