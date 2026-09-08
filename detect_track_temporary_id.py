@@ -6,27 +6,13 @@ from ultralytics import YOLO
 
 from utils.frame_quality import is_blurry, is_too_dark
 
-# ---- Tunables -------------------------------------------------------------
-MODEL_PATH   = "yolov8n.pt"   # COCO-pretrained nano; auto-downloads once
-PERSON_CLASS = 0              # COCO class id for "person"
-BASE_CONF    = 0.35           # detector confidence on normal frames.
-                              #   Tuned above YOLO's ~0.25 default to cut
-                              #   low-confidence spurious boxes  (FP fix #1)
-LOWQ_CONF    = 0.55           # raised confidence on blurry/dark frames
-MIN_HITS     = 3              # a track must be seen this many CONSECUTIVE
-                              #   frames before it is confirmed & drawn.
-                              #   Kills single-frame flicker (poster/reflection
-                              #   misdetected for one frame)     (FP fix #2)
-MIN_BOX_HEIGHT = 120         # px; ignore detections shorter than this.
-                              #   Far-away street pedestrians produce short
-                              #   boxes -- this keeps "In view" to people who
-                              #   are actually near the camera/entrance.
-                              #   RAISE to count only close people, LOWER to
-                              #   include more distant ones. Tune per camera.
-
-# >>> THE ONE LINE THAT DEFINES THIS SCRIPT'S BEHAVIOR <<<
-TRACKER = "bytetrack.yaml"   # motion-only association, NO Re-ID
-# ---------------------------------------------------------------------------
+MODEL_PATH   = "yolov8n.pt"   
+PERSON_CLASS = 0              
+BASE_CONF    = 0.35         
+LOWQ_CONF    = 0.55          
+MIN_HITS     = 3             
+MIN_BOX_HEIGHT = 120       
+TRACKER = "bytetrack.yaml"  
 
 
 def main():
