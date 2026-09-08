@@ -65,6 +65,8 @@ Press `q` to quit the live window. Running FPS is printed to the console.
 │   └── frame_quality.py          # binary classification: is_blurry(), is_too_dark()
 ├── detect_track_temporary_id.py  # YOLOv8n + ByteTrack
 ├── detect_track_persistent_id.py # YOLOv8n + BoT-SORT (Re-ID)
+
+|__detect_track_final.py
 ```
 
 ---
