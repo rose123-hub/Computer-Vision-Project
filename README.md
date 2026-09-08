@@ -65,11 +65,6 @@ Press `q` to quit the live window. Running FPS is printed to the console.
 │   └── frame_quality.py          # binary classification: is_blurry(), is_too_dark()
 ├── detect_track_temporary_id.py  # YOLOv8n + ByteTrack
 ├── detect_track_persistent_id.py # YOLOv8n + BoT-SORT (Re-ID)
-└── docs/
-    ├── TASK_TYPES.md              # detection / classification / feature extraction, mapped to code
-    ├── DATA_STRATEGY.md           # synthetic train / real val / real test — documentation only
-    ├── INFERENCE_AND_ACCURACY.md  # frame handling, false positives, benchmark accuracy
-    └── DATABASE_DESIGN.md         # why no DB is used now, and what a vector DB extension would look like
 ```
 
 ---
@@ -82,11 +77,3 @@ Press `q` to quit the live window. Running FPS is printed to the console.
 - **No database:** the Re-ID gallery is in-memory and session-scoped. A vector-database design (FAISS/Chroma/Milvus) for true cross-session identity persistence is documented as a future extension, not implemented.
 - **Scope:** detection + tracking only. No in/out line-crossing footfall counter in this version.
 
-Full rationale for each of these — including rejected alternatives, accuracy benchmarks, and false-positive handling — is in [`docs/`](./docs).
-
-## Docs index
-
-- [`docs/TASK_TYPES.md`](./docs/TASK_TYPES.md) — object detection, binary classification, feature extraction, mapped to exact code locations
-- [`docs/DATA_STRATEGY.md`](./docs/DATA_STRATEGY.md) — synthetic vs. real data strategy, annotation tooling
-- [`docs/INFERENCE_AND_ACCURACY.md`](./docs/INFERENCE_AND_ACCURACY.md) — frame handling, false-positive mitigation, benchmark accuracy figures
-- [`docs/DATABASE_DESIGN.md`](./docs/DATABASE_DESIGN.md) — current in-memory approach and the vector-DB extension for persistent identity
